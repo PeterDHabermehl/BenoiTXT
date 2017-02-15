@@ -39,37 +39,77 @@ class FtcGuiApplication(TouchApplication):
         self.xmax=0.9
         self.ymin=-1.25
         self.ymax=1.25
-        self.maxiter=24
-               
-        # create the empty main window
-        self.w = TouchWindow("BenoiTXT")
+        self.maxiter=32
         
+
+        
+        # create the empty main window
+        self.w = TouchWindow("BenoiTxt")
+        
+      
+        # create central widget
+        
+        self.centralwidget=QWidget()
+        
+        self.layout=QVBoxLayout()
+        self.layout.addStretch()
+        
+        self.text=QLabel()
+        self.text.setText("...yawn...")
+        self.text.setObjectName("smalllabel")
+        self.text.setAlignment(Qt.AlignCenter)
+        
+        self.layout.addWidget(self.text)
+        self.layout.addStretch()
+        
+        self.progress=QProgressBar()
+        self.progress.setMaximum(100)
+        self.progress.setMinimum(0)
+        self.progress.setValue(0)
+        
+        self.layout.addWidget(self.progress)
+        self.layout.addStretch()
+        
+        self.knopf=QPushButton("Start")
+        self.knopf.clicked.connect(self.rechne)
+        
+        self.layout.addWidget(self.knopf)
+        
+        self.centralwidget.setLayout(self.layout)
+        
+        self.w.setCentralWidget(self.centralwidget)
+        
+        self.w.show()
+
         # create an overlay pixmap:
   
         self.bild = QLabel(self.w)
         self.bild.setGeometry(0, 0, 240, 320)
         self.bild.setPixmap(QPixmap(240,320))
-        
-        self.invisible = QLabel(self.w)
-        self.invisible.setGeometry(0,0,240,320)
-        
-        
-        self.w.show()
-        self.invisible.mousePressEvent=self.void
-        QTimer.singleShot(800,self.rechne)
+
+        self.bild.mousePressEvent=self.on_bild_clicked
         self.exec_()
-   
+         
+    
     def void(self,event):
         print("void:",event)
     
-    def rechne(self,origin=None):
-        self.invisible.hide()
-        self.invisible.setDisabled(True)
-        self.invisible.stackUnder(self.bild)
-        self.mandelbrot_set2(self.xmin, self.xmax, self.ymin, self.ymax, 320, 240, self.maxiter, self.bild)
-        self.invisible.show()
-        self.invisible.setDisabled(False)
-        self.bild.stackUnder(self.invisible)
+    def on_bild_clicked(self,sender):
+        print(sender.type)
+        if self.bild.isVisible:  self.bild.hide()
+        else: self.bild.show()
+        
+    def rechne(self):
+        print("sr")
+        self.w.setDisabled(True)
+        self.text.setText("...computing")
+        self.progress.setValue(0)
+        (xv,yv,m)=mandelbrot_set2(self.xmin, self.xmax, self.ymin, self.ymax, 320, 240, self.maxiter, self.progress)
+        self.mand2pixmap(320,240,m,self.maxiter,self.bild.pixmap())
+        
+        self.text.setText("...ready")
+        self.bild.show()
+        self.w.setEnabled(True)
         
     def colorize(self, n, maxiter):
         if n>0 and n<maxiter:
@@ -77,39 +117,44 @@ class FtcGuiApplication(TouchApplication):
         else:
           return 0,0,0
 
-    def mandelbrot(self, creal,cimag,maxiter):
-        real = creal
-        imag = cimag
-        for n in range(maxiter):
-            real2 = real*real
-            imag2 = imag*imag
-            if real2 + imag2 > 4.0:
-                return n
-            imag = 2* real*imag + cimag
-            real = real2 - imag2 + creal       
-        return 0
-
-    def mandelbrot_set2(self,xmin,xmax,ymin,ymax,width,height,maxiter,wi):
-        r1 = np.linspace(xmin, xmax, width)
-        r2 = np.linspace(ymin, ymax, height)
-        n3 = np.empty((width,height))
-        print("start")
-        pm=wi.pixmap()
-
+    def mand2pixmap(self,width,height,mand, maxiter, pixmap):
+       
+        p = QPainter()
+        p.begin(pixmap)
         for i in range(width):
-            p = QPainter()
-            p.begin(pm)
+            
             for j in range(height):
-                (r,g,b)=self.colorize(self.mandelbrot(r1[i],r2[j],maxiter),maxiter)
+                (r,g,b)=self.colorize(mand[i,j],maxiter)
 
                 p.setPen(QColor(r,g,b,255))
-                p.drawPoint(QPoint(239-j,319-i))
-            p.end()
-            wi.repaint()
+                p.drawPoint(QPoint(height-j-1,width-i-1))
+        p.end()
+          
+def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress):
+    r1 = np.linspace(xmin, xmax, width)
+    r2 = np.linspace(ymin, ymax, height)
+    n3 = np.empty((width,height))
+    nup=100/(width*height)
+    z=0
+    for i in range(width):
+        for j in range(height):
+            n3[i,j]=mandelbrot(r1[i],r2[j],maxiter)
+            z=z+1
+            progress.setValue(z*nup)
+          
+    return r1,r2,n3
 
-              
-        print("stop")
-        return
+def mandelbrot(creal,cimag,maxiter):
+    real = creal
+    imag = cimag
+    for n in range(maxiter):
+        real2 = real*real
+        imag2 = imag*imag
+        if real2 + imag2 > 4.0:
+            return n
+        imag = 2* real*imag + cimag
+        real = real2 - imag2 + creal       
+    return 0
   
 if __name__ == "__main__":
     FtcGuiApplication(sys.argv)
