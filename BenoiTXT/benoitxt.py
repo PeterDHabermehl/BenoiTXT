@@ -3,28 +3,28 @@
 #
 
 import numpy as np
-import sys
+import sys, math
+from auxiliaries import *
 from TouchStyle import *
+from colormap import *
+
+hostdir = os.path.dirname(os.path.realpath(__file__)) + "/"
+showdir=""#showdir = hostdir + "../37681ea0-dc00-11e6-9598-0800200c9a66/pics/"
+if not os.path.exists(showdir): showdir=""
+
+# für die Entwicklungsumgebung PeH
+if not os.path.exists(showdir):
+    #showdir = hostdir + "../../37681ea0-dc00-11e6-9598-0800200c9a66/pics/"
+    develop=True
+else:
+    develop=False
+
 
 colormap=[1,1,1]*16
-colormap[ 0]=[ 66,  30,  15]
-colormap[ 1]=[ 25,   7,  26]
-colormap[ 2]=[  9,   1,  47]
-colormap[ 3]=[  4,   4,  73]
-colormap[ 4]=[  0,   7, 100] # blue 4
-colormap[ 5]=[ 12,  44, 138] # blue 3
-colormap[ 6]=[ 24,  82, 177] # blue 2
-colormap[ 7]=[ 57, 125, 209] # blue 1
-colormap[ 8]=[134, 181, 229] # blue 0
-colormap[ 9]=[211, 236, 248] # lightest blue
-colormap[10]=[241, 233, 191] # lightest yellow
-colormap[11]=[248, 201,  95] # light yellow
-colormap[12]=[255, 170,   0] # dirty yellow
-colormap[13]=[204, 128,   0] # brown 0
-colormap[14]=[153,  87,   0] # brown 1
-colormap[15]=[106,  52,   3] # brown 2
+curcolset="default"
+colormap=setColorMap(curcolset)
 
-abort=False
+cancel=False
 
 class FtcGuiApplication(TouchApplication):
     def __init__(self, args):
@@ -39,9 +39,8 @@ class FtcGuiApplication(TouchApplication):
         self.xmax=0.9
         self.ymin=-1.25
         self.ymax=1.25
-        self.maxiter=32
-        
-
+        self.maxiter=4
+        print("maxiter",math.pow(2,(self.maxiter+3)))
         
         # create the empty main window
         self.w = TouchWindow("BenoiTxt")
@@ -89,42 +88,168 @@ class FtcGuiApplication(TouchApplication):
 
         self.bild.mousePressEvent=self.on_bild_clicked
         
-        self.timer=QTimer()
-        self.timer.setInterval(50)
-        self.timer.timeout.connect(self.on_timer)
         self.exec_()
          
-    def on_timer(self):
-        #self.processEvents()
-        pass
-    
-    def void(self,event):
-        print("void:",event)
+
     
     def on_bild_clicked(self,sender):
-        print(sender.type)
-        if self.bild.isVisible:  self.bild.hide()
-        else: self.bild.show()
         
+        success=True
+        while success:
+            t=TouchAuxMultibutton("BenoiTxt",self.parent())
+            if showdir!="":t.setButtons([ QCoreApplication.translate("obc","Zoom in"),
+                                          QCoreApplication.translate("obc","Zoom out"),
+                                          QCoreApplication.translate("obc","Move"),
+                                          QCoreApplication.translate("obc","Set iterations"),
+                                          QCoreApplication.translate("obc","Set colors"),
+                                          QCoreApplication.translate("obc","Save image"),
+                                          QCoreApplication.translate("obc","Exit")
+                                          ])
+            else:          t.setButtons([ QCoreApplication.translate("obc","Zoom in"),
+                                          QCoreApplication.translate("obc","Zoom out"),
+                                          QCoreApplication.translate("obc","Move"),
+                                          QCoreApplication.translate("obc","Set iterations"),
+                                          QCoreApplication.translate("obc","Set colors"),
+                                          QCoreApplication.translate("obc","Exit")
+                                          ]) 
+            (success,result)=t.exec_()
+            
+            if   result==QCoreApplication.translate("obc","Exit"): self.exit()
+            elif result==QCoreApplication.translate("obc","Zoom in"):
+                self.do_zoom()
+                success=False
+                self.bild.hide()
+                self.progress.setValue(0)
+            elif result==QCoreApplication.translate("obc","Zoom out"):
+                self.do_zoom_out()
+                success=False
+                self.bild.hide()
+                self.progress.setValue(0) 
+            elif result==QCoreApplication.translate("obc","Move"):
+                self.do_move()
+                success=False
+                self.bild.hide()
+                self.progress.setValue(0)
+            elif result==QCoreApplication.translate("obc","Set iterations"):
+                r=self.setIterations()
+                if r:
+                    success=False
+                    self.bild.hide()
+                    self.progress.setValue(0)
+                    print("maxiter",pow(2,self.maxiter+3))
+            elif result==QCoreApplication.translate("obc","Set colors"):
+                self.setColors()
+                success=False
+            print("su",success)
+    
+    def setColors(self):
+        global curcolset, colormap
+        (success,result) = TouchAuxListRequester(QCoreApplication.translate("colors","Colors"),
+                                                 QCoreApplication.translate("colors","Select color set"),
+                                                 ["rainbow", "forest", "planet", "fire", "default"],
+                                                 curcolset,
+                                                 QCoreApplication.translate("colors","Okay")
+                                                 ).exec_()
+        if success:
+            curcolset=result
+            colormap=setColorMap(result)
+            self.mand2pixmap(320,240,self.m,int(math.pow(2,(self.maxiter+3))),self.bild.pixmap())
+            self.bild.update()
+            
+            
+    def setIterations(self):
+      
+        (success,result)= TouchAuxRequestInteger(QCoreApplication.translate("reqint","Iterations"),
+                                                 QCoreApplication.translate("reqint","Set calc. depth:"),
+                                                 self.maxiter,1,10,
+                                                 QCoreApplication.translate("reqint","Okay")).exec_()
+        if success==False or result==self.maxiter: return False
+        self.maxiter=result
+        return True
+    
+    def do_zoom(self):
+        x=self.xmin
+        self.bild.mousePressEvent=self.on_zoom_clicked
+        self.bild.update()
+        
+        while x==self.xmin:
+            self.processEvents()
+            
+        self.bild.mousePressEvent=self.on_bild_clicked
+        
+    
+    def on_zoom_clicked(self, event):
+        ky = 1-(event.pos().x())/240
+        kx = 1-(event.pos().y())/320 
+               
+        dx = (self.xmax - self.xmin)
+        dy = (self.ymax - self.ymin)
+        
+        self.xmin = self.xmin + (dx*kx) - (0.25 * dx) 
+        self.ymin = self.ymin + (dy*ky) - (0.25 * dy)
+        self.xmax = self.xmin + (0.5 * dx)
+        self.ymax = self.ymin + (0.5 * dy)
+    
+    def do_zoom_out(self):
+        dx = (self.xmax - self.xmin)/2
+        dy = (self.ymax - self.ymin)/2
+        self.xmin=self.xmin - dx 
+        self.xmax=self.xmax + dx
+        self.ymin=self.ymin - dy
+        self.ymax=self.ymax + dy
+    
+    def do_move(self):
+        x=self.xmin
+        self.bild.mousePressEvent=self.on_move_clicked
+        self.bild.update()
+        
+        while x==self.xmin:
+            self.processEvents()
+            
+        self.bild.mousePressEvent=self.on_bild_clicked
+    
+    def on_move_clicked(self, event):
+        ky = 1-(event.pos().x())/240
+        kx = 1-(event.pos().y())/320 
+               
+        dx = (self.xmax - self.xmin)
+        dy = (self.ymax - self.ymin)
+        
+        self.xmin = self.xmin + (dx*kx) - (0.5 * dx) 
+        self.ymin = self.ymin + (dy*ky) - (0.5 * dy)
+        self.xmax = self.xmin + dx
+        self.ymax = self.ymin + dy
+    
+    def stop(self):
+        self.cancel=True
+    
     def rechne(self):
-        print("sr")
-        self.timer.start()
+        self.knopf.setDisabled(True)
         self.text.setText("...computing")
         self.progress.setValue(0)
-        (xv,yv,m)=mandelbrot_set2(self.xmin, self.xmax, self.ymin, self.ymax, 320, 240, self.maxiter, self.progress)
-        self.mand2pixmap(320,240,m,self.maxiter,self.bild.pixmap())
+        (xv,yv,self.m)=mandelbrot_set2(self.xmin, self.xmax, self.ymin, self.ymax, 320, 240, int(math.pow(2,(self.maxiter+3))), self.progress, self)      
         
-        self.text.setText("...ready")
-        self.timer.stop()
-        self.bild.show()
+        if cancel:
+            self.text.setText("...yawn")
+            self.progress.setValue(0)
+        else:
+            self.mand2pixmap(320,240,self.m,int(math.pow(2,(self.maxiter+3))),self.bild.pixmap())
+            self.bild.show()
+            self.text.setText("...ready")
+        
+        self.knopf.setEnabled(True)
+        self.processEvents()
+
         
         
     def colorize(self, n, maxiter):
         if n>0 and n<maxiter:
           return colormap[int(n % 16)]
+        
         else:
           return 0,0,0
-
+        
+    
     def mand2pixmap(self,width,height,mand, maxiter, pixmap):
        
         p = QPainter()
@@ -138,7 +263,7 @@ class FtcGuiApplication(TouchApplication):
                 p.drawPoint(QPoint(height-j-1,width-i-1))
         p.end()
           
-def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress):
+def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
     r1 = np.linspace(xmin, xmax, width)
     r2 = np.linspace(ymin, ymax, height)
     n3 = np.empty((width,height))
@@ -149,7 +274,8 @@ def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress):
             n3[i,j]=mandelbrot(r1[i],r2[j],maxiter)
             z=z+1
             progress.setValue(z*nup)
-          
+            e.processEvents()
+            if cancel: return [],[],[]
     return r1,r2,n3
 
 def mandelbrot(creal,cimag,maxiter):
