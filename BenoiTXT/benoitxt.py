@@ -88,8 +88,15 @@ class FtcGuiApplication(TouchApplication):
         self.bild.setPixmap(QPixmap(240,320))
 
         self.bild.mousePressEvent=self.on_bild_clicked
+        
+        self.timer=QTimer()
+        self.timer.setInterval(50)
+        self.timer.timeout.connect(self.on_timer)
         self.exec_()
          
+    def on_timer(self):
+        #self.processEvents()
+        pass
     
     def void(self,event):
         print("void:",event)
@@ -101,15 +108,16 @@ class FtcGuiApplication(TouchApplication):
         
     def rechne(self):
         print("sr")
-        self.w.setDisabled(True)
+        self.timer.start()
         self.text.setText("...computing")
         self.progress.setValue(0)
         (xv,yv,m)=mandelbrot_set2(self.xmin, self.xmax, self.ymin, self.ymax, 320, 240, self.maxiter, self.progress)
         self.mand2pixmap(320,240,m,self.maxiter,self.bild.pixmap())
         
         self.text.setText("...ready")
+        self.timer.stop()
         self.bild.show()
-        self.w.setEnabled(True)
+        
         
     def colorize(self, n, maxiter):
         if n>0 and n<maxiter:
