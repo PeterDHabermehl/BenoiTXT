@@ -21,7 +21,7 @@ else:
 
 
 colormap=[1,1,1]*16
-curcolset="default"
+curcolset="autumn"
 colormap=setColorMap(curcolset)
 
 cancel=False
@@ -146,7 +146,7 @@ class FtcGuiApplication(TouchApplication):
         global curcolset, colormap
         (success,result) = TouchAuxListRequester(QCoreApplication.translate("colors","Colors"),
                                                  QCoreApplication.translate("colors","Select color set"),
-                                                 ["rainbow", "forest", "planet", "fire", "default"],
+                                                 ["rainbow", "forest", "planet", "fire", "dreamy", "autumn", "icy", "r-g-b", "y-c-m", "amstrad", "zuse", "monochrome", "default"],
                                                  curcolset,
                                                  QCoreApplication.translate("colors","Okay")
                                                  ).exec_()
