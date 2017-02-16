@@ -146,7 +146,7 @@ class FtcGuiApplication(TouchApplication):
         global curcolset, colormap
         (success,result) = TouchAuxListRequester(QCoreApplication.translate("colors","Colors"),
                                                  QCoreApplication.translate("colors","Select color set"),
-                                                 ["rainbow", "forest", "planet", "fire", "dreamy", "autumn", "icy", "r-g-b", "y-c-m", "amstrad", "zuse", "monochrome", "default"],
+                                                 ["rainbow", "forest", "planet", "fire", "dreamy", "autumn", "icy", "r-g-b", "y-c-m", "amstrad", "zuse", "roentgen", "binary", "default"],
                                                  curcolset,
                                                  QCoreApplication.translate("colors","Okay")
                                                  ).exec_()
