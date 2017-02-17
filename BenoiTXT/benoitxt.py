@@ -21,7 +21,7 @@ else:
 
 
 colormap=[1,1,1]*16
-curcolset="autumn"
+curcolset="r-g-b"
 colormap=setColorMap(curcolset)
 
 cancel=False
@@ -144,10 +144,11 @@ class FtcGuiApplication(TouchApplication):
     
     def setColors(self):
         #global curcolset, colormap
+        c=curcolset
         (success,result) = TouchAuxListRequester(QCoreApplication.translate("colors","Colors"),
                                                  QCoreApplication.translate("colors","Select color set"),
                                                  ["rainbow", "forest", "planet", "fire", "dreamy", "autumn", "icy", "r-g-b", "y-c-m", "amstrad", "zuse", "roentgen", "binary", "default"],
-                                                 curcolset,
+                                                 c,
                                                  QCoreApplication.translate("colors","Okay")
                                                  ).exec_()
         if success:
@@ -244,7 +245,6 @@ class FtcGuiApplication(TouchApplication):
         
     def colorize(self, n, maxiter):
         if n>0 and n<maxiter:
-          #return colormap[int(n % 16)]
           return colormap[n % 16]
         else:
           return 0,0,0
@@ -257,9 +257,10 @@ class FtcGuiApplication(TouchApplication):
         for i in range(width):
             
             for j in range(height):
-                (r,g,b)=self.colorize(mand[i,j],maxiter)
-
-                p.setPen(QColor(r,g,b,255))
+                #(r,g,b)=self.colorize(mand[i,j],maxiter)
+                #p.setPen(QColor(r,g,b,255))
+                (r,g,b)=colormap[mand[i,j]%16]
+                p.setPen(QColor(r,g,b))
                 p.drawPoint(QPoint(height-j-1,width-i-1))
         p.end()
           
