@@ -264,7 +264,7 @@ class FtcGuiApplication(TouchApplication):
                 p.drawPoint(QPoint(height-j-1,width-i-1))
         p.end()
           
-def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
+def mandelbrot_set1(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
     r1 = np.linspace(xmin, xmax, width)
     r2 = np.linspace(ymin, ymax, height)
     n3 = np.empty((width,height), int)
@@ -292,7 +292,25 @@ def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
             if cancel: return [],[],[]
     return r1,r2,n3
 
+def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
+    r1 = np.linspace(xmin, xmax, width, dtype=np.float32)
+    r2 = np.linspace(ymin, ymax, height, dtype=np.float32)
+    c = r1 + r2[:,None]*1j
+    n3 = mandelbrot_numpy(c,maxiter, progress, e)
+    return (r1,r2,n3.T) 
 
+def mandelbrot_numpy(c, maxiter, progress, e):
+    output = np.zeros(c.shape, int)
+    z = np.zeros(c.shape, np.complex64)
+    for it in range(maxiter):
+        notdone = np.less(z.real*z.real + z.imag*z.imag, 4.0)
+        output[notdone] = it
+        z[notdone] = z[notdone]**2 + c[notdone]
+        e.processEvents()
+        progress.setValue(100*it/maxiter)
+    output[output == maxiter-1] = 0
+    return output
+  
   
 if __name__ == "__main__":
     FtcGuiApplication(sys.argv)
