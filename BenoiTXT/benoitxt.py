@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 #
 
+# code based upon the work of Jean Francois Puget, found at
+# https://www.ibm.com/developerworks/community/blogs/jfp/entry/How_To_Compute_Mandelbrodt_Set_Quickly?lang=en
+#
+
+
 import numpy as np
 import sys, math
 from auxiliaries import *
@@ -39,8 +44,8 @@ class FtcGuiApplication(TouchApplication):
         self.xmax=0.9
         self.ymin=-1.25
         self.ymax=1.25
-        self.maxiter=4
-        print("maxiter",math.pow(2,(self.maxiter+3)))
+        self.maxiter=3
+        print("maxiter",int(math.pow(2,(self.maxiter+3))))
         
         # create the empty main window
         self.w = TouchWindow("BenoiTxt")
@@ -143,7 +148,7 @@ class FtcGuiApplication(TouchApplication):
             print("su",success)
     
     def setColors(self):
-        #global curcolset, colormap
+        global curcolset, colormap
         c=curcolset
         (success,result) = TouchAuxListRequester(QCoreApplication.translate("colors","Colors"),
                                                  QCoreApplication.translate("colors","Select color set"),
@@ -154,7 +159,7 @@ class FtcGuiApplication(TouchApplication):
         if success:
             curcolset=result
             colormap=setColorMap(result)
-            self.mand2pixmap(320,240,self.m,int(math.pow(2,(self.maxiter+3))),self.bild.pixmap())
+            self.mand2pixmap(320,240,self.m,int(math.pow(2,(self.maxiter+3))),self.bild.pixmap(), self.progress, self)
             self.bild.update()
             
             
@@ -234,7 +239,8 @@ class FtcGuiApplication(TouchApplication):
             self.text.setText("...yawn")
             self.progress.setValue(0)
         else:
-            self.mand2pixmap(320,240,self.m,int(math.pow(2,(self.maxiter+3))),self.bild.pixmap())
+            self.text.setText("...colormapping")
+            self.mand2pixmap(320,240,self.m,int(math.pow(2,(self.maxiter+3))),self.bild.pixmap(), self.progress, self)
             self.bild.show()
             self.text.setText("...ready")
         
@@ -250,18 +256,25 @@ class FtcGuiApplication(TouchApplication):
           return 0,0,0
         
     
-    def mand2pixmap(self,width,height,mand, maxiter, pixmap):
-       
+    def mand2pixmap(self,width,height,mand, maxiter, pixmap, progress, e):
+        pen=[]
+        for i in range(16):
+            (r,g,b)=colormap[i]
+            pen.append(QColor(r,g,b))
+        pen.append(QColor(0,0,0))
         p = QPainter()
         p.begin(pixmap)
+        
         for i in range(width):
-            
             for j in range(height):
                 #(r,g,b)=self.colorize(mand[i,j],maxiter)
                 #p.setPen(QColor(r,g,b,255))
-                (r,g,b)=colormap[mand[i,j]%16]
-                p.setPen(QColor(r,g,b))
+                pe=mand[i,j]%16
+                if mand[i,j] >0: p.setPen(pen[pe])#QColor(r,g,b))
+                else: p.setPen(pen[16])
                 p.drawPoint(QPoint(height-j-1,width-i-1))
+            #progress.setValue(100*i/width)
+            #e.processEvents()
         p.end()
           
 def mandelbrot_set1(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
@@ -293,8 +306,8 @@ def mandelbrot_set1(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
     return r1,r2,n3
 
 def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
-    r1 = np.linspace(xmin, xmax, width, dtype=np.float32)
-    r2 = np.linspace(ymin, ymax, height, dtype=np.float32)
+    r1 = np.linspace(xmin, xmax, width)
+    r2 = np.linspace(ymin, ymax, height)
     c = r1 + r2[:,None]*1j
     n3 = mandelbrot_numpy(c,maxiter, progress, e)
     return (r1,r2,n3.T) 
@@ -308,6 +321,7 @@ def mandelbrot_numpy(c, maxiter, progress, e):
         z[notdone] = z[notdone]**2 + c[notdone]
         e.processEvents()
         progress.setValue(100*it/maxiter)
+    output[output == 0] = 1
     output[output == maxiter-1] = 0
     return output
   
