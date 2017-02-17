@@ -143,7 +143,7 @@ class FtcGuiApplication(TouchApplication):
             print("su",success)
     
     def setColors(self):
-        global curcolset, colormap
+        #global curcolset, colormap
         (success,result) = TouchAuxListRequester(QCoreApplication.translate("colors","Colors"),
                                                  QCoreApplication.translate("colors","Select color set"),
                                                  ["rainbow", "forest", "planet", "fire", "dreamy", "autumn", "icy", "r-g-b", "y-c-m", "amstrad", "zuse", "roentgen", "binary", "default"],
@@ -244,8 +244,8 @@ class FtcGuiApplication(TouchApplication):
         
     def colorize(self, n, maxiter):
         if n>0 and n<maxiter:
-          return colormap[int(n % 16)]
-        
+          #return colormap[int(n % 16)]
+          return colormap[n % 16]
         else:
           return 0,0,0
         
@@ -266,29 +266,32 @@ class FtcGuiApplication(TouchApplication):
 def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
     r1 = np.linspace(xmin, xmax, width)
     r2 = np.linspace(ymin, ymax, height)
-    n3 = np.empty((width,height))
+    n3 = np.empty((width,height), int)
     nup=100/(width*height)
     z=0
     for i in range(width):
         for j in range(height):
-            n3[i,j]=mandelbrot(r1[i],r2[j],maxiter)
+            #n3[i,j]=mandelbrot(r1[i],r2[j],maxiter)
+            creal=r1[i]
+            cimag=r2[j]
+            real = creal
+            imag = cimag
+            for n3[i,j] in range(maxiter+1):
+                real2 = real*real
+                imag2 = imag*imag
+                if real2 + imag2 > 4.0:
+                    break 
+                imag = 2* real*imag + cimag
+                real = real2 - imag2 + creal 
+            if n3[i,j]==0:n3[i,j]=1
+            if n3[i,j]==maxiter: n3[i,j]=0
             z=z+1
             progress.setValue(z*nup)
             e.processEvents()
             if cancel: return [],[],[]
     return r1,r2,n3
 
-def mandelbrot(creal,cimag,maxiter):
-    real = creal
-    imag = cimag
-    for n in range(maxiter):
-        real2 = real*real
-        imag2 = imag*imag
-        if real2 + imag2 > 4.0:
-            return n
-        imag = 2* real*imag + cimag
-        real = real2 - imag2 + creal       
-    return 0
+
   
 if __name__ == "__main__":
     FtcGuiApplication(sys.argv)
