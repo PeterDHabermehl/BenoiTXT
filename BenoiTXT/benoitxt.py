@@ -256,7 +256,7 @@ class FtcGuiApplication(TouchApplication):
           return 0,0,0
         
     
-    def mand2pixmap(self,width,height,mand, maxiter, pixmap, progress, e):
+    def mand2pixmap(self,width:int,height:int,mand, maxiter:int, pixmap, progress, e):
         pen=[]
         for i in range(16):
             (r,g,b)=colormap[i]
@@ -269,8 +269,8 @@ class FtcGuiApplication(TouchApplication):
             for j in range(height):
                 #(r,g,b)=self.colorize(mand[i,j],maxiter)
                 #p.setPen(QColor(r,g,b,255))
-                pe=mand[i,j]%16
-                if mand[i,j] >0: p.setPen(pen[pe])#QColor(r,g,b))
+                pe=mand[i,j]
+                if pe >0: p.setPen(pen[pe%16])#QColor(r,g,b))
                 else: p.setPen(pen[16])
                 p.drawPoint(QPoint(height-j-1,width-i-1))
             #progress.setValue(100*i/width)
