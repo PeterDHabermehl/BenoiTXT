@@ -139,9 +139,8 @@ class FtcGuiApplication(TouchApplication):
                 r=self.setIterations()
                 if r:
                     success=False
-                    self.bild.hide()
-                    self.progress.setValue(0)
-                    print("maxiter",pow(2,self.maxiter+3))
+                    #self.bild.hide()
+                    #self.progress.setValue(0)
             elif result==QCoreApplication.translate("obc","Set colors"):
                 self.setColors()
                 success=False
@@ -150,18 +149,26 @@ class FtcGuiApplication(TouchApplication):
     def setColors(self):
         global curcolset, colormap
         c=curcolset
+        self.bild.hide()
         (success,result) = TouchAuxListRequester(QCoreApplication.translate("colors","Colors"),
                                                  QCoreApplication.translate("colors","Select color set"),
                                                  ["rainbow", "forest", "planet", "fire", "dreamy", "autumn", "icy", "r-g-b", "y-c-m", "amstrad", "zuse", "roentgen", "binary", "default"],
                                                  c,
                                                  QCoreApplication.translate("colors","Okay")
-                                                 ).exec_()
+                                                 ,self.parent()).exec_()
         if success:
             curcolset=result
             colormap=setColorMap(result)
+            
+            self.knopf.setEnabled(False)
+            self.text.setText("...colormapping")
+            self.processEvents()
             self.mand2pixmap(320,240,self.m,int(math.pow(2,(self.maxiter+3))),self.bild.pixmap(), self.progress, self)
             self.bild.update()
-            
+            self.text.setText("...ready")
+            self.processEvents()
+        self.bild.show()
+        self.knopf.setEnabled(True)
             
     def setIterations(self):
       
@@ -235,25 +242,15 @@ class FtcGuiApplication(TouchApplication):
         self.progress.setValue(0)
         (xv,yv,self.m)=mandelbrot_set2(self.xmin, self.xmax, self.ymin, self.ymax, 320, 240, int(math.pow(2,(self.maxiter+3))), self.progress, self)      
         
-        if cancel:
-            self.text.setText("...yawn")
-            self.progress.setValue(0)
-        else:
-            self.text.setText("...colormapping")
-            self.mand2pixmap(320,240,self.m,int(math.pow(2,(self.maxiter+3))),self.bild.pixmap(), self.progress, self)
-            self.bild.show()
-            self.text.setText("...ready")
+        self.text.setText("...colormapping")
+        self.progress.setValue(100)
+        self.processEvents()
+        self.mand2pixmap(320,240,self.m,int(math.pow(2,(self.maxiter+3))),self.bild.pixmap(), self.progress, self)
+        self.bild.show()
+        self.text.setText("...ready")
         
         self.knopf.setEnabled(True)
         self.processEvents()
-
-        
-        
-    def colorize(self, n, maxiter):
-        if n>0 and n<maxiter:
-          return colormap[n % 16]
-        else:
-          return 0,0,0
         
     
     def mand2pixmap(self,width:int,height:int,mand, maxiter:int, pixmap, progress, e):
@@ -267,44 +264,14 @@ class FtcGuiApplication(TouchApplication):
         
         for i in range(width):
             for j in range(height):
-                #(r,g,b)=self.colorize(mand[i,j],maxiter)
-                #p.setPen(QColor(r,g,b,255))
                 pe=mand[i,j]
                 if pe >0: p.setPen(pen[pe%16])#QColor(r,g,b))
                 else: p.setPen(pen[16])
                 p.drawPoint(QPoint(height-j-1,width-i-1))
-            #progress.setValue(100*i/width)
-            #e.processEvents()
+            progress.setValue(100*i/width)
+            e.processEvents()
         p.end()
           
-def mandelbrot_set1(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
-    r1 = np.linspace(xmin, xmax, width)
-    r2 = np.linspace(ymin, ymax, height)
-    n3 = np.empty((width,height), int)
-    nup=100/(width*height)
-    z=0
-    for i in range(width):
-        for j in range(height):
-            #n3[i,j]=mandelbrot(r1[i],r2[j],maxiter)
-            creal=r1[i]
-            cimag=r2[j]
-            real = creal
-            imag = cimag
-            for n3[i,j] in range(maxiter+1):
-                real2 = real*real
-                imag2 = imag*imag
-                if real2 + imag2 > 4.0:
-                    break 
-                imag = 2* real*imag + cimag
-                real = real2 - imag2 + creal 
-            if n3[i,j]==0:n3[i,j]=1
-            if n3[i,j]==maxiter: n3[i,j]=0
-            z=z+1
-            progress.setValue(z*nup)
-            e.processEvents()
-            if cancel: return [],[],[]
-    return r1,r2,n3
-
 def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
     r1 = np.linspace(xmin, xmax, width)
     r2 = np.linspace(ymin, ymax, height)
