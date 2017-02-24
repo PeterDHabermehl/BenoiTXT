@@ -6,52 +6,52 @@
     <message>
         <location filename="benoitxt.py" line="433"/>
         <source>Colors</source>
-        <translation type="unfinished">Farben</translation>
+        <translation>Farben</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="413"/>
         <source>Preset</source>
-        <translation type="unfinished">Vorgaben</translation>
+        <translation>Vorgaben</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="433"/>
         <source>Offset</source>
-        <translation type="unfinished">Versatz</translation>
+        <translation>Versatz</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="436"/>
         <source>Edit</source>
-        <translation type="unfinished">Bearbeite Palette</translation>
+        <translation>Bearbeite Palette</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="427"/>
         <source>Load custom</source>
-        <translation type="unfinished">Lade Palette</translation>
+        <translation>Lade Palette</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="429"/>
         <source>Save custom</source>
-        <translation type="unfinished">Sichere Palette</translation>
+        <translation>Sichere Palette</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="425"/>
         <source>Delete custom</source>
-        <translation type="unfinished">Lösche Palette</translation>
+        <translation>Lösche Palette</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="413"/>
         <source>Select color set</source>
-        <translation type="unfinished">Palette auswählen</translation>
+        <translation>Palette auswählen</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="413"/>
         <source>Okay</source>
-        <translation type="unfinished">Okay</translation>
+        <translation>Okay</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="433"/>
         <source>Set offset</source>
-        <translation type="unfinished">Versatz wählen</translation>
+        <translation>Versatz wählen</translation>
     </message>
 </context>
 <context>
@@ -59,12 +59,12 @@
     <message>
         <location filename="benoitxt.py" line="380"/>
         <source>Delete</source>
-        <translation type="unfinished">Löschen</translation>
+        <translation>Löschen</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="383"/>
         <source>Really delete colorset?</source>
-        <translation type="unfinished">Palette wirklich löschen?</translation>
+        <translation>Palette wirklich löschen?</translation>
     </message>
 </context>
 <context>
@@ -72,12 +72,55 @@
     <message>
         <location filename="benoitxt.py" line="353"/>
         <source>Load</source>
-        <translation type="unfinished">Laden</translation>
+        <translation>Laden</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="391"/>
         <source>No custom colorsets found!</source>
-        <translation type="unfinished">Keine Paletten-Dateien gefunden!</translation>
+        <translation>Keine Paletten-Dateien gefunden!</translation>
+    </message>
+</context>
+<context>
+    <name>main</name>
+    <message>
+        <location filename="benoitxt.py" line="103"/>
+        <source>...yawn...</source>
+        <translation>...gähn...</translation>
+    </message>
+    <message>
+        <location filename="benoitxt.py" line="118"/>
+        <source>Start</source>
+        <translation>Berechnen</translation>
+    </message>
+    <message>
+        <location filename="benoitxt.py" line="553"/>
+        <source>...colormapping</source>
+        <translation>...einfärben</translation>
+    </message>
+    <message>
+        <location filename="benoitxt.py" line="583"/>
+        <source>...ready</source>
+        <translation>...bereit</translation>
+    </message>
+    <message>
+        <location filename="benoitxt.py" line="549"/>
+        <source>...computing</source>
+        <translation>...berechne</translation>
+    </message>
+    <message>
+        <location filename="benoitxt.py" line="568"/>
+        <source>...computing&lt;br&gt;hi-res</source>
+        <translation>...berechne&lt;br&gt;hochauflösend</translation>
+    </message>
+    <message>
+        <location filename="benoitxt.py" line="572"/>
+        <source>...colormapping&lt;br&gt;hi-res</source>
+        <translation>...einfärben&lt;br&gt;hochauflösend</translation>
+    </message>
+    <message>
+        <location filename="benoitxt.py" line="577"/>
+        <source>...save</source>
+        <translation>Sichern</translation>
     </message>
 </context>
 <context>
@@ -85,62 +128,62 @@
     <message>
         <location filename="benoitxt.py" line="221"/>
         <source>Zoom in</source>
-        <translation type="unfinished">Vergrößern</translation>
+        <translation>Vergrößern</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="228"/>
         <source>Zoom out</source>
-        <translation type="unfinished">Verkleinern</translation>
+        <translation>Verkleinern</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="235"/>
         <source>Move</source>
-        <translation type="unfinished">Verschieben</translation>
+        <translation>Verschieben</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="248"/>
         <source>Set colors</source>
-        <translation type="unfinished">Farben</translation>
+        <translation>Farben</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="173"/>
         <source>Options</source>
-        <translation type="unfinished">Mehr...</translation>
+        <translation>Mehr...</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="172"/>
         <source>Exit</source>
-        <translation type="unfinished">Beenden</translation>
+        <translation>Beenden</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="210"/>
         <source>Save image</source>
-        <translation type="unfinished">Bild speichern</translation>
+        <translation>Bild sichern</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="215"/>
         <source>Zoom factor</source>
-        <translation type="unfinished">Vergr.-Faktor</translation>
+        <translation>Vergr.-Faktor</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="191"/>
         <source>Reset region</source>
-        <translation type="unfinished">Region reset</translation>
+        <translation>Region reset</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="199"/>
         <source>Region data</source>
-        <translation type="unfinished">Region bearb.</translation>
+        <translation>Region bearb.</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="242"/>
         <source>Set iterations</source>
-        <translation type="unfinished">Rechentiefe</translation>
+        <translation>Rechentiefe</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="206"/>
         <source>Re-calculate</source>
-        <translation type="unfinished">Neu berechnen</translation>
+        <translation>Neu berechnen</translation>
     </message>
 </context>
 <context>
@@ -148,12 +191,12 @@
     <message>
         <location filename="benoitxt.py" line="275"/>
         <source>Set</source>
-        <translation type="unfinished">Setzen</translation>
+        <translation>Setzen</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="270"/>
         <source>Okay</source>
-        <translation type="unfinished">Okay</translation>
+        <translation>Okay</translation>
     </message>
 </context>
 <context>
@@ -161,27 +204,27 @@
     <message>
         <location filename="benoitxt.py" line="457"/>
         <source>Iterations</source>
-        <translation type="unfinished">Iterationen</translation>
+        <translation>Iterationen</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="457"/>
         <source>Set calc. depth:</source>
-        <translation type="unfinished">Max. Iterationstiefe einstellen:</translation>
+        <translation>Max. Iterationstiefe einstellen:</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="467"/>
         <source>Okay</source>
-        <translation type="unfinished">Okay</translation>
+        <translation>Okay</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="467"/>
         <source>Zoom</source>
-        <translation type="unfinished">Zoom</translation>
+        <translation>Zoom</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="467"/>
         <source>Set zoom factor:</source>
-        <translation type="unfinished">Vergrößerungsfaktor wählen:</translation>
+        <translation>Vergrößerungsfaktor wählen:</translation>
     </message>
 </context>
 <context>
@@ -189,17 +232,17 @@
     <message>
         <location filename="benoitxt.py" line="306"/>
         <source>Save</source>
-        <translation type="unfinished">Sichern</translation>
+        <translation>Sichern</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="301"/>
         <source>Save TXT image or generate HiRes 1280x960 image (will take a lot of time)?</source>
-        <translation type="unfinished">TXT-Bild speichern oder 1280x960px. Bild berechnen (dauert laaange)?</translation>
+        <translation>TXT-Bild sichern oder 1280x960px. Bild berechnen (dauert laaange)?</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="310"/>
         <source>Generate</source>
-        <translation type="unfinished">Berechnen</translation>
+        <translation>Berechnen</translation>
     </message>
 </context>
 <context>
@@ -207,27 +250,27 @@
     <message>
         <location filename="benoitxt.py" line="324"/>
         <source>Name?</source>
-        <translation type="unfinished">Name?</translation>
+        <translation>Name?</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="336"/>
         <source>Colorset already exists!</source>
-        <translation type="unfinished">Palette existiert bereits!</translation>
+        <translation>Palette existiert bereits!</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="340"/>
         <source>Overwrite</source>
-        <translation type="unfinished">Überschreiben</translation>
+        <translation>Überschreiben</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="385"/>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <location filename="benoitxt.py" line="387"/>
         <source>Delete</source>
-        <translation type="unfinished">Löschen</translation>
+        <translation>Löschen</translation>
     </message>
 </context>
 </TS>
