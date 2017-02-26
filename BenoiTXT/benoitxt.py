@@ -621,7 +621,7 @@ def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, progress, e):
 
 def mandelbrot_numpy(c, maxiter, progress, e):
     output = np.zeros(c.shape, int)
-    z = np.zeros(c.shape, np.complex64)
+    z = np.zeros(c.shape, np.complex128)
     for it in range(maxiter):
         notdone = np.less(z.real*z.real + z.imag*z.imag, 4.0)
         output[notdone] = it
