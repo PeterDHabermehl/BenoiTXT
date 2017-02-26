@@ -209,10 +209,9 @@ class FtcGuiApplication(TouchApplication):
                 self.w.show()
             elif result==QCoreApplication.translate("obc","Zoom factor"):
                 r=self.setZoomFactor()
-                if r:
-                    success=False
-                    self.bild.show()
-                    self.w.show()
+                success=False
+                self.bild.show()
+                self.w.show()
             elif result==QCoreApplication.translate("obc","Zoom in"):
                 self.bild.show()
                 self.w.show()
