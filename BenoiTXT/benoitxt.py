@@ -617,8 +617,8 @@ def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter, precision,progress
       r1 = np.linspace(xmin, xmax, width)
       r2 = np.linspace(ymin, ymax, height)
     else:
-      r1 = np.linspace(xmin, xmax, width, np.float128)
-      r2 = np.linspace(ymin, ymax, height, np.float128)
+      r1 = np.linspace(xmin, xmax, width, np.longdouble)
+      r2 = np.linspace(ymin, ymax, height, np.longdouble)
     
     c = r1 + r2[:,None]*1j
     n3 = mandelbrot_numpy(c,maxiter, precision, progress, e)
@@ -628,7 +628,7 @@ def mandelbrot_numpy(c, maxiter, precision, progress, e):
     output = np.zeros(c.shape, int)
     if precision=="single":
           z = np.zeros(c.shape, np.complex64)
-    else: z = np.zeros(c.shape, np.complex256)
+    else: z = np.zeros(c.shape, np.complex128)
     
     for it in range(maxiter):
         notdone = np.less(z.real*z.real + z.imag*z.imag, 4.0)
