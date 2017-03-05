@@ -70,7 +70,7 @@ class FtcGuiApplication(TouchApplication):
         self.ccset=""
         
         #create backdrop window for TXT
-        if TXT or True:
+        if TXT:
           self.b=TouchWindow("")
           bb = QLabel(self.b)
           bb.setGeometry(0, 0, 240, 320)
